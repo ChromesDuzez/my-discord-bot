@@ -19,25 +19,21 @@ public class Bot extends ListenerAdapter
 		if(BOT_TOKEN.length() < 6)
 		{
 			System.out.println("The current Bot Token is invalid.");
-			System.out.println("i.e. ODM3NTg1ODY5NTEwMjc5MjE4.YIusoA.pqcCFPujuBn0vdbyFev8NCNEyZw");
 			System.out.print("Please enter in your Bot Token for discord: ");
 			BOT_TOKEN = in.nextLine();
 		}
 		
-		if(_owner.length() < 6)
+		while(_owner.length() < 18)
 		{
 			System.out.println("The current owner ID is invalid.");
 			System.out.println("i.e. 336231886198276096");
 			System.out.print("Please enter in the ID for the user you want to have the rank owner in discord: ");
 			_owner = in.nextLine();
-		}
-		
-		if(_bitchboy.length() < 6)
-		{
-			System.out.println("The current pranked user ID is invalid.");
-			System.out.println("i.e. 438428649881075712");
-			System.out.print("Please enter in the ID for the user you want to prank in discord: ");
-			_bitchboy = in.nextLine();
+			
+			if(_owner.length() < 18)
+			{
+				System.out.println("The owner ID you put in is invalid.");
+			}
 		}
 		
 		api = JDABuilder.createDefault(BOT_TOKEN).build();
