@@ -1,3 +1,4 @@
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -77,6 +78,7 @@ public class MyListener extends ListenerAdapter
 				System.out.println("Bot Shutdown initiated by server owner.");
 				channel.sendMessage("The Bot will now go offline.").queue();
 				channel.sendMessage("Contact Lord Plat if this is incorrect.").queue();
+				Bot.saveProperties("Post Save State - Auto-Save");
 				Bot.api.shutdown();
 				System.out.println("Done. Exited with code 0.");
 			}
@@ -102,6 +104,7 @@ public class MyListener extends ListenerAdapter
 		
 		if(msg.getContentRaw().equalsIgnoreCase("//get owner"))
 		{
+			System.out.println("owner = " + Bot.getOwner());
 			channel.sendMessage("The owner is: " + Bot.getOwner()).queue();
 		}
 		
@@ -112,6 +115,7 @@ public class MyListener extends ListenerAdapter
 		
 		if(msg.getContentRaw().equalsIgnoreCase("//bingbongchingchong"))
 		{
+			System.out.println("User wanted the funny joke video. Sent it to the channel.");
 			channel.sendMessage("https://www.youtube.com/watch?v=Q8QlNuTUe4M").queue();
 		}
 		
@@ -129,12 +133,13 @@ public class MyListener extends ListenerAdapter
                    .queue(response /* => Message */ -> {
                        response.editMessageFormat("Pong: %d ms", System.currentTimeMillis() - time).queue();
                    });
+            System.out.println("Pong: " + (System.currentTimeMillis() - time) + " ms");
         }
 		else if(event.getAuthor().isBot())
 			return;
 		else if(author.equalsIgnoreCase(Bot.getBitchboy()))
 		{
-	         channel.sendMessage("Fuck Off!").queue();
+	         channel.sendMessage(":-1:").queue();
 		}
 		else
 			return;
@@ -144,7 +149,7 @@ public class MyListener extends ListenerAdapter
 	public void onGuildVoiceJoin(GuildVoiceJoinEvent event)
 	{
 		String sender = event.getMember().getId();
-		if(sender.equals("263453486593736705"))
+		if(sender.equals(Bot.getBitchboy()))
 			event.getMember().deafen(true);
 	}
 }

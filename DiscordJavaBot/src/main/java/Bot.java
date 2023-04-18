@@ -1,67 +1,116 @@
+import java.lang.reflect.Member;
 import java.util.Scanner;
+import java.util.Properties;  
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 
 public class Bot extends ListenerAdapter
 {
-	private static String BOT_TOKEN = " ";
+	private static Properties p;
 	public static JDA api;
-	private static String _owner = " ";
-	private static String _bitchboy = " ";
+	private static String _bitchboy = " "; 
 	
 	public static void main(String[] args) throws Exception
 	{
+		
+		FileReader reader = new FileReader("config.properties");  
+	      
+	    p = new Properties();  
+	    p.load(reader);  
+	    
 		Scanner in = new Scanner(System.in);
 		
-		if(BOT_TOKEN.length() < 6)
+		System.out.println("BOT_TOKEN = " + p.getProperty("BOT_TOKEN"));  
+	    System.out.println("owner = " + p.getProperty("owner"));
+		String BOT_TOKEN = p.getProperty("BOT_TOKEN");
+		String _owner = p.getProperty("owner");
+		
+		while(BOT_TOKEN == null || BOT_TOKEN.length() < 6)
 		{
 			System.out.println("The current Bot Token is invalid.");
-			System.out.println("i.e. ODM3NTg1ODY5NTEwMjc5MjE4.YIusoA.pqcCFPujuBn0vdbyFev8NCNEyZw");
 			System.out.print("Please enter in your Bot Token for discord: ");
 			BOT_TOKEN = in.nextLine();
+			
+			if(BOT_TOKEN.equalsIgnoreCase("stop"))
+			{
+				break;
+			}
+			else
+			{
+				p.setProperty("BOT_TOKEN", BOT_TOKEN);
+			}
 		}
 		
-		if(_owner.length() < 6)
+		while(_owner == null || _owner.length() < 6)
 		{
-			System.out.println("The current owner ID is invalid.");
-			System.out.println("i.e. 336231886198276096");
-			System.out.print("Please enter in the ID for the user you want to have the rank owner in discord: ");
+			System.out.println("The current owner is invalid.");
+			System.out.print("Please enter in your owner ID for discord (this will be saved): ");
 			_owner = in.nextLine();
+			
+			if(_owner.equalsIgnoreCase("stop"))
+			{
+				break;
+			}
+			else
+			{
+				p.setProperty("owner", _owner);
+			}
 		}
 		
-		if(_bitchboy.length() < 6)
+		p.store(new FileWriter("config.properties"), "Current Save State - Auto-Save");  
+		
+		if( (! (BOT_TOKEN.length() < 6) ) || (! (_owner.length() < 6)) ) 
 		{
-			System.out.println("The current pranked user ID is invalid.");
-			System.out.println("i.e. 438428649881075712");
-			System.out.print("Please enter in the ID for the user you want to prank in discord: ");
-			_bitchboy = in.nextLine();
+			api = JDABuilder.createDefault(BOT_TOKEN).build();
+			api.addEventListener(new MyListener());
 		}
-		
-		api = JDABuilder.createDefault(BOT_TOKEN).build();
-		api.addEventListener(new MyListener());
 	}
 	
 	
 	public static void setOwner(String owner)
 	{
-		_owner = owner;
+		
+		if( (owner.equalsIgnoreCase("stop")) || (owner.length() < 6) )
+		{
+			System.out.println("User tried to transfer arbitrary owner to an invalid target.");
+		}
+		else
+		{
+			p.setProperty("owner", owner);
+		}
+		System.out.println("owner = " + p.getProperty("owner"));
 	}
 	
-	public static void setBitchboy(String bitchboy)
+	public static void setBitchboy(String prankee)
 	{
-		_bitchboy = bitchboy;
+		p.setProperty("prankee", prankee);
 	}
 	
 	public static String getOwner()
 	{
-		return _owner;
+		return p.getProperty("owner");
 	}
 	
 	public static String getBitchboy()
 	{
-		return _bitchboy;
+		return p.getProperty("prankee");
+	}
+	
+	public static void saveProperties(String message)
+	{
+		message = message != null ? message : "Random Save State - Auto-Save";
+		try {
+			p.store(new FileWriter("config.properties"), message);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 }
