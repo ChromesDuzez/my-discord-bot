@@ -1,6 +1,9 @@
 import java.lang.reflect.Member;
 import java.util.Scanner;
-import java.util.Properties;  
+import java.util.Properties;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,7 +23,16 @@ public class Bot extends ListenerAdapter
 	public static void main(String[] args) throws Exception
 	{
 		
-		FileReader reader = new FileReader("config.properties");  
+		FileReader reader;
+		try {
+			reader = new FileReader("config.properties");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			String currentPath = new File(".").getCanonicalPath();
+			FileOutputStream output = new FileOutputStream(currentPath + "/config.properties");
+			reader = new FileReader("config.properties");
+			//e.printStackTrace();
+		}  
 	      
 	    p = new Properties();  
 	    p.load(reader);  
