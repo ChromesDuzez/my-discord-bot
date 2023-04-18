@@ -30,7 +30,6 @@ public class Bot extends ListenerAdapter
 			String currentPath = new File(".").getCanonicalPath();
 			FileOutputStream output = new FileOutputStream(currentPath + "/config.properties");
 			reader = new FileReader("config.properties");
-			//e.printStackTrace();
 		}  
 	      
 	    p = new Properties();  
