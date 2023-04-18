@@ -94,3 +94,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 DiscordJavaBot/config.properties
+*.properties
