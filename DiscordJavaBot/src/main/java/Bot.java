@@ -22,7 +22,6 @@ public class Bot extends ListenerAdapter
 	
 	public static void main(String[] args) throws Exception
 	{
-		
 		FileReader reader;
 		try {
 			reader = new FileReader("config.properties");
